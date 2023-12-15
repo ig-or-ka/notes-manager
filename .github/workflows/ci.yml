@@ -1,0 +1,32 @@
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: rkhazh/first_dock
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build 
+      working-directory: ./cpp
+      run: make build
+    - name: Upload build
+      uses: actions/upload-artifact@v2
+      with:
+        name: build-artifact
+        path: ./cpp/build
+
+  linters:
+    runs-on: ubuntu-latest
+    container: rkhazh/first_dock
+    needs: [build]
+    steps:
+    - uses: actions/checkout@v2 
+    - working-directory: ./cpp
+      run: mkdir build
+    - uses: actions/download-artifact@v2
+      with:
+        name: build-artifact
+        path: ./cpp/build
+    - name: Linters
+      working-directory: ./cpp
+      run: make lint
