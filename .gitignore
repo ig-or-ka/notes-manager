@@ -1,0 +1,4 @@
+.vscode/
+test.py
+notes.sqlite
+__pycache__/
